@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from openpyxl import load_workbook
 
 # Function to search for the data
@@ -37,14 +38,31 @@ def update_data():
         if found:
             wb.save('D:\Wed\data.xlsx')
             print("Data updated successfully.")
+            refresh_data() # Refresh the Treeview with the updated data
         else:
             print("ID not found. Please check the ID and try again.")
     except ValueError:
         print("Please enter a valid number for USD.")
     except Exception as e:
         print(f"An error occurred: {e}")
+    
 
 
+# Function to load data from Excel into the Treeview
+def load_data():
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        tree.insert("", tk.END, values=row)
+
+
+# Function to refresh the Treeview with updated data
+def refresh_data():
+    for item in tree.get_children():
+        tree.delete(item)
+    load_data()
+    
+ # Load the workbook and select the active sheet
+wb = load_workbook('D:\\Wed\\data.xlsx')
+sheet = wb.active   
 
 # Load the workbook and select the active sheet
 wb = load_workbook('D:\Wed\data.xlsx')
@@ -82,6 +100,17 @@ button_clear = tk.Button(root, text="Clear", command=clear_entries)
 button_clear.grid(row=5, column=1)
 button_update = tk.Button(root, text="Update", command=update_data)
 button_update.grid(row=4, column=1)
+
+# Create the Treeview widget
+tree = ttk.Treeview(root, columns=("ID", "Name", "USD", "Riel"), show='headings')
+tree.heading("ID", text="ID")
+tree.heading("Name", text="Name")
+tree.heading("USD", text="USD")
+tree.heading("Riel", text="Riel")
+tree.grid(row=6, columnspan=4, sticky='nsew')
+
+# Load data into the Treeview
+load_data()
 
 # Run the main loop
 root.mainloop()
