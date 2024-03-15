@@ -31,8 +31,8 @@ def update_data():
         found = False
         for row in sheet.iter_rows(min_row=2):
             if str(row[0].value).zfill(3) == id_search.zfill(3):
-                row[2].value = float(entry_usd.get())  # Assuming USD is a number
-                row[3].value = entry_riel.get()  # Assuming Riel is text
+                row[2].value = int(entry_usd.get())  # Assuming USD is a number
+                row[3].value = int(entry_riel.get())  # Assuming Riel is text
                 found = True
                 break
         if found:
@@ -70,16 +70,18 @@ sheet = wb.active
 
 # Create the main window
 root = tk.Tk()
-root.title("Data Search and Update")
+root.title("Wedding Guest Book")
+
+
 
 # Create the entry widgets
-entry_id = tk.Entry(root)
+entry_id = tk.Entry(root, width=40)
 entry_id.grid(row=0, column=1)
-entry_name = tk.Entry(root)
+entry_name = tk.Entry(root, width=40)
 entry_name.grid(row=1, column=1)
-entry_usd = tk.Entry(root)
+entry_usd = tk.Entry(root, width=40)
 entry_usd.grid(row=2, column=1)
-entry_riel = tk.Entry(root)
+entry_riel = tk.Entry(root, width=40)
 entry_riel.grid(row=3, column=1)
 
 # Create the label widgets
