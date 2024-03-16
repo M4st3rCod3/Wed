@@ -30,20 +30,21 @@ def clear_entries():
 def update_data():
     try:
         id_search = entry_id.get()
+        name_to_find = entry_name.get()  # Also get the Name 
         found = False
         for row in sheet.iter_rows(min_row=2):
-            if str(row[0].value).zfill(3) == id_search.zfill(3):
-                row[1].value = entry_name.get()  # Update the Name
-                row[2].value = int(entry_usd.get())  # Update the USD
-                row[3].value = int(entry_riel.get())  # Update the Riel
+            if str(row[0].value).zfill(3) == id_search.zfill(3) and row[1].value == name_to_find:  # Match Name too
+                row[2].value = int(entry_usd.get())  
+                row[3].value = int(entry_riel.get())
                 found = True
-                break
+                break  # Can break, since we found the specific row
+
         if found:
             wb.save('D:\Wed\data.xlsx')
             print("Data updated successfully.")
-            refresh_data()  # Refresh the Treeview with the updated data
+            refresh_data()
         else:
-            print("ID not found. Please check the ID and try again.")
+            print("ID and Name combination not found. Please check the ID and Name and try again.")
     except ValueError:
         print("Please enter a valid number for USD and Riel.")
     except Exception as e:
