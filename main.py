@@ -40,7 +40,7 @@ def update_data():
                 break  # Can break, since we found the specific row
 
         if found:
-            wb.save('D:\Wed\data.xlsx')
+            wb.save('.\data.xlsx')
             print("Data updated successfully.")
             refresh_data()
         else:
@@ -90,11 +90,11 @@ def refresh_data():
     load_data()
     
  # Load the workbook and select the active sheet
-wb = load_workbook('D:\\Wed\\data.xlsx')
+wb = load_workbook('.\data.xlsx')
 sheet = wb.active   
 
 # Load the workbook and select the active sheet
-wb = load_workbook('D:\Wed\data.xlsx')
+wb = load_workbook('.\data.xlsx')
 sheet = wb.active
 
 # Create the main window
