@@ -148,4 +148,6 @@ tree.bind('<<TreeviewSelect>>', on_tree_select)
 load_data()
 
 # Run the main loop
+
 root.mainloop() #ok
+
