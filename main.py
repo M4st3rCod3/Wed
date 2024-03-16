@@ -6,17 +6,8 @@ from openpyxl import load_workbook
 # Function to search for the data
 def search_data():
     id_search = entry_id.get()
-    load_data(id_search)  # Pass the ID search term to load_data
-    for row in sheet.iter_rows(min_row=2, values_only=True):
-        # Convert both to string for an exact match
-        if str(row[0]).zfill(3) == id_search.zfill(3):
-            entry_name.delete(0, tk.END)
-            entry_name.insert(0, row[1])
-            entry_usd.delete(0, tk.END)
-            entry_usd.insert(0, str(row[2]) if row[2] is not None else "") #Update to str when search   
-            entry_riel.delete(0, tk.END) 
-            entry_riel.insert(0, str(row[3]) if row[3] is not None else "") #Update to str whem search
-            break
+    name_search = entry_name.get()
+    load_data(id_search, name_search)  # Pass the ID and Name search terms to load_data
 
 
 # Function to clear all the entry widgets and reset the Treeview
@@ -72,19 +63,18 @@ def on_tree_select(event):
         print("No item selected")
 
 
-
-# Function to load data from Excel into the Treeview
-def load_data(id_search=None):
+# Function to load data from Excel into the Treeview with search functionality
+def load_data(id_search=None, name_search=None):
     for item in tree.get_children():
         tree.delete(item)
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        if id_search:
-            # Check if the ID in the row starts with the entered ID
-            if str(row[0]).startswith(id_search):
-                tree.insert("", tk.END, values=row)
-        else:
+        # Check if the ID matches the search term, if provided
+        id_match = str(row[0]).zfill(3) == id_search.zfill(3) if id_search else True
+        # Check if the Name matches the search term, if provided and not None
+        name_match = name_search.lower() in (row[1] or "").lower() if name_search else True
+        # If both ID and Name match (or are not provided), insert the row into the Treeview
+        if id_match and name_match:
             tree.insert("", tk.END, values=row)
-
 
 
 # Function to refresh the Treeview with updated data
