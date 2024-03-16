@@ -11,9 +11,9 @@ def search_data():
             entry_name.delete(0, tk.END)
             entry_name.insert(0, row[1])
             entry_usd.delete(0, tk.END)
-            entry_usd.insert(0, row[2])
+            entry_usd.insert(0, str(row[2]) if row[2] is not None else "") #Update to str when search   
             entry_riel.delete(0, tk.END)
-            entry_riel.insert(0, row[3])
+            entry_riel.insert(0, str(row[3]) if row[3] is not None else "") #Update to str whem search
             break
 
 
