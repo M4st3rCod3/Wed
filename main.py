@@ -5,6 +5,7 @@ from openpyxl import load_workbook
 # Function to search for the data
 def search_data():
     id_search = entry_id.get()
+    load_data(id_search)  # Pass the ID search term to load_data
     for row in sheet.iter_rows(min_row=2, values_only=True):
         # Convert both to string for an exact match
         if str(row[0]).zfill(3) == id_search.zfill(3):
@@ -17,41 +18,68 @@ def search_data():
             break
 
 
-# Function to clear all the entry widgets
+# Function to clear all the entry widgets and reset the Treeview
 def clear_entries():
     entry_id.delete(0, tk.END)
     entry_name.delete(0, tk.END)
     entry_usd.delete(0, tk.END)
     entry_riel.delete(0, tk.END)
+    load_data()  # Call load_data without arguments to reset the Treeview
 
-# Function to update the data
+# Update the update_data function to handle the Treeview selection
 def update_data():
     try:
         id_search = entry_id.get()
         found = False
         for row in sheet.iter_rows(min_row=2):
             if str(row[0].value).zfill(3) == id_search.zfill(3):
-                row[2].value = int(entry_usd.get())  # Assuming USD is a number
-                row[3].value = int(entry_riel.get())  # Assuming Riel is text
+                row[1].value = entry_name.get()  # Update the Name
+                row[2].value = int(entry_usd.get())  # Update the USD
+                row[3].value = int(entry_riel.get())  # Update the Riel
                 found = True
                 break
         if found:
             wb.save('D:\Wed\data.xlsx')
             print("Data updated successfully.")
-            refresh_data() # Refresh the Treeview with the updated data
+            refresh_data()  # Refresh the Treeview with the updated data
         else:
             print("ID not found. Please check the ID and try again.")
     except ValueError:
-        print("Please enter a valid number for USD.")
+        print("Please enter a valid number for USD and Riel.")
     except Exception as e:
         print(f"An error occurred: {e}")
     
 
 
+# Function to fill the entry widgets with the data from the selected row
+def on_tree_select(event):
+    # Check if there is a selection
+    if tree.selection():
+        selected_item = tree.selection()[0]  # Get selected item
+        # Get the values of the selected row
+        selected_row = tree.item(selected_item, 'values')
+        # Clear the entry fields
+        clear_entries()
+        # Insert the data into the entry fields
+        entry_id.insert(0, selected_row[0])
+        entry_name.insert(0, selected_row[1])
+        entry_usd.insert(0, selected_row[2])
+        entry_riel.insert(0, selected_row[3])
+    else:
+        print("No item selected")
+
+
 # Function to load data from Excel into the Treeview
-def load_data():
+def load_data(id_search=None):
+    for item in tree.get_children():
+        tree.delete(item)
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        tree.insert("", tk.END, values=row)
+        if id_search:
+            # Check if the ID in the row starts with the entered ID
+            if str(row[0]).startswith(id_search):
+                tree.insert("", tk.END, values=row)
+        else:
+            tree.insert("", tk.END, values=row)
 
 
 # Function to refresh the Treeview with updated data
@@ -110,7 +138,8 @@ tree.heading("Name", text="Name")
 tree.heading("USD", text="USD")
 tree.heading("Riel", text="Riel")
 tree.grid(row=6, columnspan=4, sticky='nsew')
-
+# Bind the select event of the tree to the on_tree_select function
+tree.bind('<<TreeviewSelect>>', on_tree_select)
 # Load data into the Treeview
 load_data()
 
