@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from openpyxl import load_workbook
 
+
 # Function to search for the data
 def search_data():
     id_search = entry_id.get()
@@ -13,7 +14,7 @@ def search_data():
             entry_name.insert(0, row[1])
             entry_usd.delete(0, tk.END)
             entry_usd.insert(0, str(row[2]) if row[2] is not None else "") #Update to str when search   
-            entry_riel.delete(0, tk.END)
+            entry_riel.delete(0, tk.END) 
             entry_riel.insert(0, str(row[3]) if row[3] is not None else "") #Update to str whem search
             break
 
@@ -25,6 +26,7 @@ def clear_entries():
     entry_usd.delete(0, tk.END)
     entry_riel.delete(0, tk.END)
     load_data()  # Call load_data without arguments to reset the Treeview
+
 
 # Update the update_data function to handle the Treeview selection
 def update_data():
@@ -70,6 +72,7 @@ def on_tree_select(event):
         print("No item selected")
 
 
+
 # Function to load data from Excel into the Treeview
 def load_data(id_search=None):
     for item in tree.get_children():
@@ -83,24 +86,23 @@ def load_data(id_search=None):
             tree.insert("", tk.END, values=row)
 
 
+
 # Function to refresh the Treeview with updated data
 def refresh_data():
     for item in tree.get_children():
         tree.delete(item)
     load_data()
+
     
- # Load the workbook and select the active sheet
+    
+# Load the workbook and select the active sheet
 wb = load_workbook('.\data.xlsx')
 sheet = wb.active   
 
-# Load the workbook and select the active sheet
-wb = load_workbook('.\data.xlsx')
-sheet = wb.active
 
 # Create the main window
 root = tk.Tk()
 root.title("Wedding Guest Book")
-
 
 
 # Create the entry widgets
@@ -124,12 +126,12 @@ label_riel = tk.Label(root, text="Riel")
 label_riel.grid(row=3, column=0)
 
 # Create the button widgets
-button_search = tk.Button(root, text="Search", command=search_data)
+button_search = tk.Button(root, text="Search", command=search_data,width=20)
 button_search.grid(row=4, column=0)
 # Create the 'Clear' button and place it on the grid
-button_clear = tk.Button(root, text="Clear", command=clear_entries)
-button_clear.grid(row=5, column=1)
-button_update = tk.Button(root, text="Update", command=update_data)
+button_clear = tk.Button(root, text="Clear", command=clear_entries,width=20)
+button_clear.grid(row=4, column=2)
+button_update = tk.Button(root, text="Update", command=update_data,width=20)
 button_update.grid(row=4, column=1)
 
 # Create the Treeview widget
@@ -138,11 +140,12 @@ tree.heading("ID", text="ID")
 tree.heading("Name", text="Name")
 tree.heading("USD", text="USD")
 tree.heading("Riel", text="Riel")
-tree.grid(row=6, columnspan=4, sticky='nsew')
+
+tree.grid(row=7, columnspan=5, sticky='nsew')
 # Bind the select event of the tree to the on_tree_select function
 tree.bind('<<TreeviewSelect>>', on_tree_select)
 # Load data into the Treeview
 load_data()
 
 # Run the main loop
-root.mainloop()
+root.mainloop() #ok
